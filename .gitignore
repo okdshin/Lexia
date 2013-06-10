@@ -1,0 +1,6 @@
+env/*
+dist/*
+*.o
+*.out
+*.swp
+*.swo
