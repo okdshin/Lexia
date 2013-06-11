@@ -6,10 +6,16 @@ namespace lexia
 {
 class TokenType{
 public:
-	static auto EOF_TOKEN_TYPE() -> TokenType { return TokenType("EOF_TOKEN"); }
+	static auto LEXIA_EOF_TOKEN_TYPE() -> TokenType { return TokenType("LEXIA_EOF_TOKEN"); }
+#ifndef LEXICALANALYZER_UNIT_TEST
+{{ token_type_code }}
+#else
 	static auto INT() -> TokenType { return TokenType("INT"); }
-	static auto INT_CONSTANT() -> TokenType { return TokenType("INT_CONSTANT"); }
-	static auto IDENTIFIER() -> TokenType { return TokenType("IDENTIFIER"); }
+	static auto SEMICOLON() -> TokenType { return TokenType("SEMICOLON"); }
+	static auto EQUAL() -> TokenType { return TokenType("EQUAL"); }
+	static auto CONSTANT() -> TokenType { return TokenType("CONSTANT"); }
+	static auto IDENTIFIER() -> TokenType { return TokenType("IDENTIFIER"); }	
+#endif
 
 	bool operator==(const TokenType& pair)const { 
 		return this->token_type_str == pair.token_type_str; }
