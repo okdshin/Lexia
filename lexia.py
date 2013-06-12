@@ -1,5 +1,6 @@
 #coding utf-8
 import sys
+import re
 import jinja2
 
 CONSTANT = {'DELIMITER' : ':',
@@ -51,6 +52,10 @@ def main():
     ignore_reg = ''
     for line in definition_file:
         tokens = [token.strip(' \t\n\r') for token in line.split(CONSTANT['DELIMITER'])]
+        while len(tokens) is not 2:
+            print('ouch!! delimiter error! but...')
+            tokens[0] = tokens[0] + CONSTANT['DELIMITER'] + tokens[1]
+            tokens.pop(1)
         if len(tokens) is not 2:
             print("ouch!! delimiter error!")
             return
