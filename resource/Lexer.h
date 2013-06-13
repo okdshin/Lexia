@@ -30,13 +30,11 @@ auto operator<<(std::ostream& os, const Word& word) -> std::ostream& {
 
 class Token{
 public:
-	using Ptr = SharedPtr<Token>;
-	static auto Create(const TokenType& type, const Word& word) -> Ptr {
-		return Ptr(new Token(type, word));	
-	}
-
-	static auto EOF_TOKEN() -> Ptr {
-		return Token::Create(TokenType::LEXIA_EOF_TOKEN_TYPE(), Word("EOF_CHARACTOR"));	
+	Token(const TokenType& type, const Word& word) 
+		: type_(type), word_(word){}
+	
+	static auto EOF_TOKEN() -> Token{
+		return Token(TokenType::LEXIA_EOF_TOKEN_TYPE(), Word("EOF_CHARACTOR"));	
 	}
 
 	auto IsEof()const -> bool {
@@ -52,9 +50,6 @@ public:
 	}
 	
 private:
-	Token(const TokenType& type, const Word& word) 
-		: type_(type), word_(word){}
-	
 	TokenType type_;
 	Word word_;
 };
@@ -81,7 +76,7 @@ public:
 		code_(code){}
 
 
-	auto GetNextToken() -> Token::Ptr {	
+	auto GetNextToken() -> Token {	
 		std::cout << code_ << std::endl;
 		{
 #ifndef LEXER_UNIT_TEST
@@ -99,31 +94,31 @@ public:
 			return Token::EOF_TOKEN();
 		}
 
-		std::vector<Token::Ptr> regular_expression_token_list;
+		std::vector<Token> regular_expression_token_list;
 #ifndef LEXER_UNIT_TEST
 {{ regular_expression_code }}
 #else
 		std::cout << "!!!UNIT TEST SAMPLE!!!" << std::endl;
 		regular_expression_token_list.push_back(
-			Token::Create(TokenType::INT(), Word("^int")));
+			Token(TokenType::INT(), Word("^int")));
 		regular_expression_token_list.push_back(
-			Token::Create(TokenType::SEMICOLON(), Word("^;")));
+			Token(TokenType::SEMICOLON(), Word("^;")));
 		regular_expression_token_list.push_back(
-			Token::Create(TokenType::EQUAL(), Word("^=")));
+			Token(TokenType::EQUAL(), Word("^=")));
 		regular_expression_token_list.push_back(
-			Token::Create(TokenType::CONSTANT(), Word("^[0-9]+")));
+			Token(TokenType::CONSTANT(), Word("^[0-9]+")));
 		regular_expression_token_list.push_back(
-			Token::Create(TokenType::IDENTIFIER(), Word("^[a-zA-Z_][a-zA-Z0-9_]*")));	
+			Token(TokenType::IDENTIFIER(), Word("^[a-zA-Z_][a-zA-Z0-9_]*")));	
 #endif
-		std::vector<Token::Ptr> matched_token_list;
+		std::vector<Token> matched_token_list;
 		for(const auto reg_token : regular_expression_token_list){
-			const boost::regex reg(reg_token->GetWord().ToString());
+			const boost::regex reg(reg_token.GetWord().ToString());
 			boost::smatch matched;
 			if(boost::regex_search(code_, matched, reg)){
 				std::cout << "matched:" << matched.str() 
-					<< " as " << reg_token->GetType() << std::endl;
+					<< " as " << reg_token.GetType() << std::endl;
 				matched_token_list.push_back(
-					Token::Create(reg_token->GetType(), matched.str()));	
+					Token(reg_token.GetType(), matched.str()));	
 			}
 		}
 
@@ -135,14 +130,14 @@ public:
 
 		const auto longest_matched_token = 
 			*std::max_element(matched_token_list.begin(), matched_token_list.end(),
-				[](const Token::Ptr& left, const Token::Ptr& right) -> bool {
-					return left->GetWord().ToString().length() 
-						< right->GetWord().ToString().length();
+				[](const Token& left, const Token& right) -> bool {
+					return left.GetWord().ToString().length() 
+						< right.GetWord().ToString().length();
 				}
 			);
 		
 		std::cout << "before:" << code_ << std::endl;
-		code_.erase(0, longest_matched_token->GetWord().ToString().length());
+		code_.erase(0, longest_matched_token.GetWord().ToString().length());
 		std::cout << "after:" << code_ << std::endl;
 		return longest_matched_token; 
 	}

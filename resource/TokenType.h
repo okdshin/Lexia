@@ -7,7 +7,7 @@ namespace lexia
 class TokenType{
 public:
 	static auto LEXIA_EOF_TOKEN_TYPE() -> TokenType { return TokenType("LEXIA_EOF_TOKEN"); }
-#ifndef LEXICALANALYZER_UNIT_TEST
+#ifndef LEXER_UNIT_TEST
 {{ token_type_code }}
 #else
 	static auto INT() -> TokenType { return TokenType("INT"); }
