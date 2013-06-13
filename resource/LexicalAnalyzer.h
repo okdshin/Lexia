@@ -4,6 +4,7 @@
 #include <iostream>
 #include <exception>
 #include <boost/regex.hpp>
+#include <boost/format.hpp>
 #include "TokenType.h"
 
 namespace lexia
@@ -82,9 +83,6 @@ public:
 
 	auto GetNextToken() -> Token::Ptr {	
 		std::cout << code_ << std::endl;
-		if(code_.empty()){
-			return Token::EOF_TOKEN();
-		}
 		{
 #ifndef LEXICALANALYZER_UNIT_TEST
 			boost::regex ignore_reg("^{{ ignore_regular_expression }}");
@@ -97,8 +95,11 @@ public:
 			std::cout << matched_str.length() << std::endl;
 			code_.erase(0, matched_str.length());
 		}
-		std::vector<Token::Ptr> regular_expression_token_list;
+		if(code_.empty()){
+			return Token::EOF_TOKEN();
+		}
 
+		std::vector<Token::Ptr> regular_expression_token_list;
 #ifndef LEXICALANALYZER_UNIT_TEST
 {{ regular_expression_code }}
 #else
@@ -127,7 +128,8 @@ public:
 
 		if(matched_token_list.empty()){
 			const auto invalid_char = std::string(1, code_.front());
-			throw InvalidCharactorError("InvalidCharactorError: \""+invalid_char+"\"");
+			auto message_format = boost::format("InvalidCharactorError: \"%1%\"(CharCode: %2%) is invalid charactor.") % invalid_char % int(code_.front());
+			throw InvalidCharactorError(message_format.str());
 		}
 
 		const auto longest_matched_token = 

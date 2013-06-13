@@ -1,6 +1,6 @@
 [ \t\n]*:	LEXIA_IGNORE
 if:		:	IF
-while	:	WHILE
+while:	:	WHILE
 int		:	INT
 \(		:	LEFT_PARENTHESIS
 \)		:	RIGHT_PARENTHESIS

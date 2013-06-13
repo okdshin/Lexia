@@ -1,12 +1,11 @@
 #coding utf-8
 import sys
-import re
+import os
 import jinja2
 
 CONSTANT = {'DELIMITER' : ':',
 'IGNORE_KEYWORD' : 'LEXIA_IGNORE',
 'LEXICAL_ANALYZER_TEMPLATE_FILE' : 'resource/LexicalAnalyzer.h',
-'LEXICAL_ANALYZER_TEMPLATE_FILES' : ['resource/SharedPtr.h', 'resource/Word.h', 'resource/Token.h', 'resource/LexicalAnalyzer.h'],
 'TOKEN_TYPE_FILE':'resource/TokenType.h'}
 class Definition:
     def __init__(self):
@@ -53,7 +52,7 @@ def main():
     for line in definition_file:
         tokens = [token.strip(' \t\n\r') for token in line.split(CONSTANT['DELIMITER'])]
         while len(tokens) is not 2:
-            print('ouch!! delimiter error! but...')
+            print('DEBUG: ouch!! delimiter is used. but ... OK')
             tokens[0] = tokens[0] + CONSTANT['DELIMITER'] + tokens[1]
             tokens.pop(1)
         if len(tokens) is not 2:
@@ -77,7 +76,7 @@ def main():
     try: 
         open('LexicalAnalyzer.h', 'w').write(
             jinja2.Template(
-                open(CONSTANT['LEXICAL_ANALYZER_TEMPLATE_FILE'], 'r').read() 
+                open(os.path.join(os.path.dirname(sys.executable), CONSTANT['LEXICAL_ANALYZER_TEMPLATE_FILE']), 'r').read() 
             ).render(
                 ignore_regular_expression=ignore_reg, 
                 regular_expression_code=reg_code))
@@ -95,7 +94,7 @@ def main():
     try: 
         open('TokenType.h', 'w').write(
             jinja2.Template(
-                open(CONSTANT['TOKEN_TYPE_FILE'], 'r').read() 
+                open(os.path.join(os.path.dirname(sys.executable), CONSTANT['TOKEN_TYPE_FILE']), 'r').read() 
             ).render(token_type_code=type_code))
 
     except FileNotFoundError:
