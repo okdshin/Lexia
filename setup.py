@@ -17,7 +17,7 @@ setup(
         executables = [Executable("lexia.py")],
         options = {
             'build_exe': {
-                'include_files':['resource/LexicalAnalyzer.h', 'resource/TokenType.h']
+                'include_files':['resource/Lexer.h', 'resource/TokenType.h']
             }    
         })
 

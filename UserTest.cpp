@@ -1,7 +1,7 @@
 #ifdef USERTEST_UNIT_TEST
 #include "UserTest.h"
 #include <iostream>
-#include "LexicalAnalyzer.h"
+#include "Lexer.h"
 
 using namespace user_test;
 
@@ -9,10 +9,10 @@ int main(int argc, char* argv[])
 {
 	while(true){
 		std::string line;
-		std::getline(std::cin, line);
-		lexia::LexicalAnalyzer lexical_analyzer(line);
+		if(!std::getline(std::cin, line)){ break; }
+		lexia::Lexer lexer(line);
 		while(true){
-			const auto token = lexical_analyzer.GetNextToken(); 
+			const auto token = lexer.GetNextToken(); 
 			if(token->IsEof()){
 				break;	
 			}

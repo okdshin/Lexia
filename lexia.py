@@ -5,7 +5,7 @@ import jinja2
 
 CONSTANT = {'DELIMITER' : ':',
 'IGNORE_KEYWORD' : 'LEXIA_IGNORE',
-'LEXICAL_ANALYZER_TEMPLATE_FILE' : 'resource/LexicalAnalyzer.h',
+'LEXICAL_ANALYZER_TEMPLATE_FILE' : 'resource/Lexer.h',
 'TOKEN_TYPE_FILE':'resource/TokenType.h'}
 class Definition:
     def __init__(self):
@@ -17,24 +17,13 @@ class Definition:
         self.type_name = type_name
 
     def __str__(self):
-        return self.regular_expression + " -> " + self.type_name
+        return '\"' + self.regular_expression + '" -> ' + self.type_name
 
     def get_regular_expression(self):
         return self.regular_expression.replace('"', '\\"')
 
     def get_type_name(self):
         return self.type_name
-
-def generate_file_from_template(
-        template_file_path, render_arg_dict, dst_file_path, file_not_found_message):
-    try:
-        template_file = open(template_file_path, 'r')
-        template = jinja2.Template(token_type_template_file.read())
-        dst_file = open(dst_file_path, 'w')
-        dst_file.write(template.render(**render_arg_dict))
-
-    except FileNotFoundError:
-        print(file_not_found_message)
 
 def main():
     if len(sys.argv) != 2:
@@ -52,7 +41,7 @@ def main():
     for line in definition_file:
         tokens = [token.strip(' \t\n\r') for token in line.split(CONSTANT['DELIMITER'])]
         while len(tokens) is not 2:
-            print('DEBUG: ouch!! delimiter is used. but ... OK')
+            print('DEBUG: ouch!! delimiter is used. but ... OK. Only last one is used as delimiter.')
             tokens[0] = tokens[0] + CONSTANT['DELIMITER'] + tokens[1]
             tokens.pop(1)
         if len(tokens) is not 2:
@@ -74,7 +63,7 @@ def main():
                 for definition in definition_list])
  
     try: 
-        open('LexicalAnalyzer.h', 'w').write(
+        open('Lexer.h', 'w').write(
             jinja2.Template(
                 open(os.path.join(os.path.dirname(sys.executable), CONSTANT['LEXICAL_ANALYZER_TEMPLATE_FILE']), 'r').read() 
             ).render(
