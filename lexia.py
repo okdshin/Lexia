@@ -5,8 +5,9 @@ import jinja2
 
 CONSTANT = {'DELIMITER' : ':',
 'IGNORE_KEYWORD' : 'LEXIA_IGNORE',
-'LEXICAL_ANALYZER_TEMPLATE_FILE' : 'resource/Lexer.h',
-'TOKEN_TYPE_FILE':'resource/TokenType.h'}
+'RESOURCE_DIRECTORY': 'resource',
+'LEXICAL_ANALYZER_TEMPLATE_FILE' : 'Lexer.h',
+'TOKEN_TYPE_TEMPLATE_FILE':'TokenType.h'}
 class Definition:
     def __init__(self):
         self.regular_expression = ""
@@ -63,9 +64,9 @@ def main():
                 for definition in definition_list])
  
     try: 
-        open('Lexer.h', 'w').write(
+        open(CONSTANT['LEXICAL_ANALYZER_TEMPLATE_FILE'], 'w').write(
             jinja2.Template(
-                open(os.path.join(os.path.dirname(sys.executable), CONSTANT['LEXICAL_ANALYZER_TEMPLATE_FILE']), 'r').read() 
+                open(os.path.join(os.path.dirname(sys.executable), CONSTANT['RESOURCE_DIRECTORY'], CONSTANT['LEXICAL_ANALYZER_TEMPLATE_FILE']), 'r').read() 
             ).render(
                 ignore_regular_expression=ignore_reg, 
                 regular_expression_code=reg_code))
@@ -81,9 +82,9 @@ def main():
             r=definition.get_regular_expression().replace('\\', '\\\\')) 
                 for definition in definition_list])
     try: 
-        open('TokenType.h', 'w').write(
+        open(CONSTANT['TOKEN_TYPE_TEMPLATE_FILE'], 'w').write(
             jinja2.Template(
-                open(os.path.join(os.path.dirname(sys.executable), CONSTANT['TOKEN_TYPE_FILE']), 'r').read() 
+                open(os.path.join(os.path.dirname(sys.executable), CONSTANT['RESOURCE_DIRECTORY'], CONSTANT['TOKEN_TYPE_TEMPLATE_FILE']), 'r').read() 
             ).render(token_type_code=type_code))
 
     except FileNotFoundError:
