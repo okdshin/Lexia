@@ -7,7 +7,6 @@ CONSTANT = {'DELIMITER' : ':',
 'IGNORE_KEYWORD' : 'LEXIA_IGNORE',
 'RESOURCE_DIRECTORY': 'resource',
 'LEXICAL_ANALYZER_TEMPLATE_FILE' : 'Lexer.h',
-'TOKEN_TYPE_TEMPLATE_FILE':'TokenType.h',
 'REGULAR_CODE_TEMPLATE':'\t\tregular_expression_token_list.push_back(\n\t\t\tToken(TokenType::{{ t }}(), Word("^{{ r }}")));',
 'TOKEN_TYPE_CODE_TEMPLATE':'\tstatic auto {{ t }}() -> TokenType { return TokenType("{{ t }}"); }'
 }
@@ -55,11 +54,18 @@ def main():
             ignore_reg = tokens[0]
         else:
             definition_list.append(Definition(tokens[0], tokens[1]))
-    reg_code_template = jinja2.Template(CONSTANT['REGULAR_CODE_TEMPLATE'])
     for definition in definition_list:
         print(definition)
     print('ignore', ignore_reg)
 
+    token_type_code_template = jinja2.Template(CONSTANT['TOKEN_TYPE_CODE_TEMPLATE'])
+    type_code = '\n'.join(
+        [token_type_code_template.render(
+            t=definition.get_type_name(), 
+            r=definition.get_regular_expression().replace('\\', '\\\\')) 
+                for definition in definition_list])
+    
+    reg_code_template = jinja2.Template(CONSTANT['REGULAR_CODE_TEMPLATE'])
     reg_code = '\n'.join(
         [reg_code_template.render(
             t=definition.get_type_name(), 
@@ -71,29 +77,13 @@ def main():
             jinja2.Template(
                 open(os.path.join(os.path.dirname(sys.executable), CONSTANT['RESOURCE_DIRECTORY'], CONSTANT['LEXICAL_ANALYZER_TEMPLATE_FILE']), 'r').read() 
             ).render(
+                token_type_code = type_code,
                 ignore_regular_expression=ignore_reg, 
                 regular_expression_code=reg_code))
 
     except FileNotFoundError:
         print("FileNotFoundError: LexicalAnalyzer template file not found.")
         return 
-    
-    token_type_code_template = jinja2.Template(CONSTANT['TOKEN_TYPE_CODE_TEMPLATE'])
-    type_code = '\n'.join(
-        [token_type_code_template.render(
-            t=definition.get_type_name(), 
-            r=definition.get_regular_expression().replace('\\', '\\\\')) 
-                for definition in definition_list])
-    try: 
-        open(CONSTANT['TOKEN_TYPE_TEMPLATE_FILE'], 'w').write(
-            jinja2.Template(
-                open(os.path.join(os.path.dirname(sys.executable), CONSTANT['RESOURCE_DIRECTORY'], CONSTANT['TOKEN_TYPE_TEMPLATE_FILE']), 'r').read() 
-            ).render(token_type_code=type_code))
-
-    except FileNotFoundError:
-        print("FileNotFoundError: TokenType template file not found.")
-        return 
-
 
 if __name__ == '__main__':
     main()
