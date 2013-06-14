@@ -6,6 +6,8 @@ namespace lexia
 {
 class TokenType{
 public:
+	static auto LEXIA_UNINITIALIZED_TOKEN_TYPE() -> TokenType { 
+		return TokenType("LEXIA_UNINITIALIZED_TOKEN"); }
 	static auto LEXIA_EOF_TOKEN_TYPE() -> TokenType { return TokenType("LEXIA_EOF_TOKEN"); }
 #ifndef LEXER_UNIT_TEST
 {{ token_type_code }}
@@ -19,6 +21,8 @@ public:
 
 	bool operator==(const TokenType& pair)const { 
 		return this->token_type_str == pair.token_type_str; }
+	bool operator!=(const TokenType& pair)const { 
+		return !(*this == pair); }
 
 	friend auto operator<<(
 		std::ostream& os, const TokenType& token_type) -> std::ostream&;

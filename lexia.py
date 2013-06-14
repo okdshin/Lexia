@@ -7,7 +7,10 @@ CONSTANT = {'DELIMITER' : ':',
 'IGNORE_KEYWORD' : 'LEXIA_IGNORE',
 'RESOURCE_DIRECTORY': 'resource',
 'LEXICAL_ANALYZER_TEMPLATE_FILE' : 'Lexer.h',
-'TOKEN_TYPE_TEMPLATE_FILE':'TokenType.h'}
+'TOKEN_TYPE_TEMPLATE_FILE':'TokenType.h',
+'REGULAR_CODE_TEMPLATE':'\t\tregular_expression_token_list.push_back(\n\t\t\tToken(TokenType::{{ t }}(), Word("^{{ r }}")));',
+'TOKEN_TYPE_CODE_TEMPLATE':'\tstatic auto {{ t }}() -> TokenType { return TokenType("{{ t }}"); }'
+}
 class Definition:
     def __init__(self):
         self.regular_expression = ""
@@ -52,7 +55,7 @@ def main():
             ignore_reg = tokens[0]
         else:
             definition_list.append(Definition(tokens[0], tokens[1]))
-    reg_code_template = jinja2.Template('\t\tregular_expression_token_list.push_back(\n\t\t\tToken::Create(TokenType::{{ t }}(), Word("^{{ r }}")));')
+    reg_code_template = jinja2.Template(CONSTANT['REGULAR_CODE_TEMPLATE'])
     for definition in definition_list:
         print(definition)
     print('ignore', ignore_reg)
@@ -75,7 +78,7 @@ def main():
         print("FileNotFoundError: LexicalAnalyzer template file not found.")
         return 
     
-    token_type_code_template = jinja2.Template('\tstatic auto {{ t }}() -> TokenType { return TokenType("{{ t }}"); }')
+    token_type_code_template = jinja2.Template(CONSTANT['TOKEN_TYPE_CODE_TEMPLATE'])
     type_code = '\n'.join(
         [token_type_code_template.render(
             t=definition.get_type_name(), 

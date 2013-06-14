@@ -14,6 +14,7 @@ using SharedPtr = std::shared_ptr<T>;
 
 class Word{
 public:
+	Word() : word_str_(){}
     Word(const std::string& word_str) : word_str_(word_str){}
 
 	auto ToString()const -> std::string {
@@ -30,6 +31,7 @@ auto operator<<(std::ostream& os, const Word& word) -> std::ostream& {
 
 class Token{
 public:
+	Token():type_(TokenType::LEXIA_UNINITIALIZED_TOKEN_TYPE()), word_(){}
 	Token(const TokenType& type, const Word& word) 
 		: type_(type), word_(word){}
 	
