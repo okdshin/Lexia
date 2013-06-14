@@ -2,6 +2,7 @@
 #define LEXER_H
 //Lexer:20130416
 #include <iostream>
+#include <string>
 #include <exception>
 #include <boost/regex.hpp>
 #include <boost/format.hpp>
@@ -23,23 +24,27 @@ public:
 	static auto IDENTIFIER() -> TokenType { return TokenType("IDENTIFIER"); }	
 #endif
 
-	bool operator==(const TokenType& pair)const { 
-		return this->token_type_str == pair.token_type_str; }
-	bool operator!=(const TokenType& pair)const { 
-		return !(*this == pair); }
+	auto ToString()const -> std::string {
+		return token_type_str;	
+	}
 
-	friend auto operator<<(
-		std::ostream& os, const TokenType& token_type) -> std::ostream&;
+	auto operator==(const TokenType& pair)const -> bool { 
+		return this->token_type_str == pair.token_type_str; 
+	}
+
+	auto operator!=(const TokenType& pair)const -> bool { 
+		return !(*this == pair); 
+	}
 
 private:
 	TokenType(const std::string& token_type_str) : token_type_str(token_type_str){}
 	std::string token_type_str;
 };
-
 auto operator<<(std::ostream& os, const TokenType& token_type) -> std::ostream& {
-	os << "TokenType:" << token_type.token_type_str;	
+	os << "TokenType:" << token_type.ToString();	
 	return os;	
 }
+
 class Word{
 public:
 	Word() : word_str_(){}
