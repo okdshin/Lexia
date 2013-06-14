@@ -42,6 +42,10 @@ public:
 	auto IsEof()const -> bool {
 		return type_ == TokenType::LEXIA_EOF_TOKEN_TYPE();		
 	}
+	
+	auto IsUninitialized()const -> bool {
+		return type_ == TokenType::LEXIA_UNINITIALIZED_TOKEN_TYPE();		
+	}
 
 	auto GetType()const -> TokenType {
 		return type_;
