@@ -13,10 +13,10 @@ int main(int argc, char* argv[])
 		lexia::Lexer lexer(line);
 		while(true){
 			const auto token = lexer.GetNextToken(); 
-			if(token->IsEof()){
+			if(token.IsEof()){
 				break;	
 			}
-			std::cout << "NextToken:" << *token << "\n" << std::endl;
+			std::cout << "NextToken:" << token << "\n" << std::endl;
 			//std::string str;
 			//std::cin >> str;
 		}
