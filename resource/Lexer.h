@@ -119,9 +119,9 @@ public:
 		std::cout << code_ << std::endl;
 		{
 #ifndef LEXER_UNIT_TEST
-			boost::regex ignore_reg("^[ \t\n]*");
+			boost::regex ignore_reg("\\A[ \\t\\n]*");
 #else
-			boost::regex ignore_reg("^[ \\t\\n]*");
+			boost::regex ignore_reg("\\A[ \\t\\n]*");
 #endif
 			boost::smatch matched;
 			boost::regex_search(code_, matched, ignore_reg);
@@ -139,15 +139,15 @@ public:
 #else
 		std::cout << "!!!UNIT TEST SAMPLE!!!" << std::endl;
 		regular_expression_token_list.push_back(
-			Token(TokenType::INT(), Word("^int")));
+			Token(TokenType::INT(), Word("\\Aint")));
 		regular_expression_token_list.push_back(
-			Token(TokenType::SEMICOLON(), Word("^;")));
+			Token(TokenType::SEMICOLON(), Word("\\A;")));
 		regular_expression_token_list.push_back(
-			Token(TokenType::EQUAL(), Word("^=")));
+			Token(TokenType::EQUAL(), Word("\\A=")));
 		regular_expression_token_list.push_back(
-			Token(TokenType::CONSTANT(), Word("^[0-9]+")));
+			Token(TokenType::CONSTANT(), Word("\\A[0-9]+")));
 		regular_expression_token_list.push_back(
-			Token(TokenType::IDENTIFIER(), Word("^[a-zA-Z_][a-zA-Z0-9_]*")));	
+			Token(TokenType::IDENTIFIER(), Word("\\A[a-zA-Z_][a-zA-Z0-9_]*")));	
 #endif
 		std::vector<Token> matched_token_list;
 		for(const auto reg_token : regular_expression_token_list){

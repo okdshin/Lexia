@@ -7,8 +7,8 @@ CONSTANT = {'DELIMITER' : ':',
 'IGNORE_KEYWORD' : 'LEXIA_IGNORE',
 'RESOURCE_DIRECTORY': 'resource',
 'LEXICAL_ANALYZER_TEMPLATE_FILE' : 'Lexer.h',
-'REGULAR_CODE_TEMPLATE':'\t\tregular_expression_token_list.push_back(\n\t\t\tToken(TokenType::{{ t }}(), Word("^{{ r }}")));',
-'TOKEN_TYPE_CODE_TEMPLATE':'\tstatic auto {{ t }}() -> TokenType { return TokenType("{{ t }}"); }'
+'TOKEN_TYPE_CODE_TEMPLATE':'\tstatic auto {{ t }}() -> TokenType { return TokenType("{{ t }}"); }',
+'REGULAR_CODE_TEMPLATE':'\t\tregular_expression_token_list.push_back(\n\t\t\tToken(TokenType::{{ t }}(), Word("\\\\A{{ r }}")));'
 }
 class Definition:
     def __init__(self):
@@ -78,7 +78,7 @@ def main():
                 open(os.path.join(os.path.dirname(sys.executable), CONSTANT['RESOURCE_DIRECTORY'], CONSTANT['LEXICAL_ANALYZER_TEMPLATE_FILE']), 'r').read() 
             ).render(
                 token_type_code = type_code,
-                ignore_regular_expression=ignore_reg, 
+                ignore_regular_expression=ignore_reg.replace('\\', '\\\\'), 
                 regular_expression_code=reg_code))
 
     except FileNotFoundError:
