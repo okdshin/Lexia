@@ -119,7 +119,7 @@ public:
 		std::cout << code_ << std::endl;
 		{
 #ifndef LEXER_UNIT_TEST
-			boost::regex ignore_reg("\\A[ \\t\\n]*");
+			boost::regex ignore_reg("\\A{{ ignore_regular_expression }}");
 #else
 			boost::regex ignore_reg("\\A[ \\t\\n]*");
 #endif

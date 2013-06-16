@@ -1,4 +1,4 @@
-[ \t\n]*:	LEXIA_IGNORE
+[ \s]*:	LEXIA_IGNORE
 if:		:	IF
 while:	:	WHILE
 int		:	INT
