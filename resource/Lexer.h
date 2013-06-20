@@ -14,6 +14,7 @@ public:
 	static auto LEXIA_UNINITIALIZED_TOKEN_TYPE() -> TokenType { 
 		return TokenType("LEXIA_UNINITIALIZED_TOKEN"); }
 	static auto LEXIA_EOF_TOKEN_TYPE() -> TokenType { return TokenType("LEXIA_EOF_TOKEN"); }
+	static auto LEXIA_CONS_TOKEN_TYPE() -> TokenType { return TokenType("LEXIA_CONS_TOKEN"); }
 #ifndef LEXER_UNIT_TEST
 {{ token_type_code }}
 #else
@@ -70,6 +71,10 @@ public:
 	
 	static auto EOF_TOKEN() -> Token{
 		return Token(TokenType::LEXIA_EOF_TOKEN_TYPE(), Word("EOF_CHARACTOR"));	
+	}
+	
+	static auto CONS_TOKEN() -> Token{
+		return Token(TokenType::LEXIA_CONS_TOKEN_TYPE(), Word("CONS"));	
 	}
 
 	auto IsEof()const -> bool {
