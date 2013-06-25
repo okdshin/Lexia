@@ -37,7 +37,7 @@ public:
 	}
 
 private:
-	TokenType(const std::string& token_type_str) : token_type_str(token_type_str){}
+	explicit TokenType(const std::string& token_type_str) : token_type_str(token_type_str){}
 	std::string token_type_str;
 };
 auto operator<<(std::ostream& os, const TokenType& token_type) -> std::ostream& {
@@ -48,7 +48,7 @@ auto operator<<(std::ostream& os, const TokenType& token_type) -> std::ostream& 
 class Word{
 public:
 	Word() : word_str_(){}
-    Word(const std::string& word_str) : word_str_(word_str){}
+    explicit Word(const std::string& word_str) : word_str_(word_str){}
 
 	auto ToString()const -> std::string {
 		return word_str_;	
@@ -60,6 +60,9 @@ private:
 auto operator<<(std::ostream& os, const Word& word) -> std::ostream& {
 	os << "Word:" << "\"" << word.ToString() << "\"";
 	return os;
+}
+auto operator <(const Word& left, const Word& right) -> bool {
+	return left.ToString() < right.ToString();	
 }
 
 class Token{
